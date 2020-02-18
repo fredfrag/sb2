@@ -1,270 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Scanbot SDK Cordova Plugin
-
-  Copyright (c) 2017 doo GmbH. All rights reserved.
--->
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+<plugin
+        xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-scanbot-sdk" version="1.7.0">
+        id="io-anyline-cordova"
+        version="19.0.0">
 
-  <name>Scanbot SDK Cordova Plugin</name>
-  <description>Cordova Plugin for Scanbot SDK</description>
-  <license></license>
-  <keywords>scanbot,sdk,camera,scanner,scanning,document detection,edge detection,cropping,pdf,pdf creation,image optimization,image filter,ocr,optical character recognition,barcode,qr code,cordova,plugin</keywords>
+    <name>AnylineSDK</name>
 
-  <js-module src="www/ScanbotSdk.js" name="ScanbotSdk">
-    <clobbers target="ScanbotSdk" />
-  </js-module>
+    <!--Add Platform specific Files-->
+    <platform name="ios">
+	
+		<js-module src="www/anyline.js" name="anyline">
+			<clobbers target="window.Anyline" />
+		</js-module>
+	
+        <plugins-plist key="AnylineSDK" string="AnylineSDKPlugin"/>
+        <!-- feature tag in config.xml -->
+        <config-file parent="/widget" target="config.xml">
+            <feature name="AnylineSDK">
+                <param name="ios-package" value="AnylineSDKPlugin"/>
+            </feature>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+            <string>Allow Anyline to access your camera?</string>
+        </config-file>
 
-  <js-module src="www/ScanbotSdkUi.js" name="ScanbotSdkUi">
-    <clobbers target="ScanbotSdkUi" />
-  </js-module>
+        <!-- Anyline SDK Cordova Plugin Source for iOS -->
+        <header-file src="src/ios/AnylineSDKPlugin.h"/>
+        <source-file src="src/ios/AnylineSDKPlugin.m"/>
+        <header-file src="src/ios/ALPluginHelper.h"/>
+        <source-file src="src/ios/ALPluginHelper.m"/>
+        <header-file src="src/ios/ALPluginScanViewController.h"/>
+        <source-file src="src/ios/ALPluginScanViewController.m"/>
+        <header-file src="src/ios/ALRoundedView.h"/>
+        <source-file src="src/ios/ALRoundedView.m"/>
+        <header-file src="src/ios/ALCordovaUIConfiguration.h"/>
+        <source-file src="src/ios/ALCordovaUIConfiguration.m"/>
 
+        <!-- Anyline Framework & Resource Bundle locally -->
+        <!-- <framework custom="true" src="src/ios/anyline_sdk/Anyline.framework"/>-->
+        <!-- <resource-file src="src/ios/anyline_sdk/AnylineResources.bundle"/>-->
 
-  <!-- Android -->
-  <platform name="android">
-    <config-file target="config.xml" parent="/*">
-      <feature name="ScanbotSdk">
-        <param name="android-package" value="io.scanbot.sdk.plugin.cordova.ScanbotSdkPlugin"/>
-      </feature>
-      <feature name="ScanbotSdkUi">
-        <param name="android-package" value="io.scanbot.sdk.plugin.cordova.ScanbotCameraPlugin"/>
-      </feature>
-    </config-file>
+        <!-- Anyline Framework & Resource Bundle CocoaPods -->
+        <framework src="Anyline" type="podspec" swift-version="4.2" spec="~> 19"/>
 
-    <!-- TODO Eddy: Temporary removed the "edit-config" tag due to an issue with merging functionality. See https://issues.apache.org/jira/browse/CB-13474 -->
-    <!--
-    <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
-      <application android:largeHeap="true" />
-    </edit-config>
-    -->
-
-    <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <activity android:name="io.scanbot.sdk.plugin.cordova.ScanbotCameraActivity"
-                android:theme="@style/Theme.AppCompat" />
-      <activity android:name="io.scanbot.sdk.plugin.cordova.ScanbotEditImageActivity"
-                android:theme="@style/Theme.AppCompat" />
-      <activity android:name="io.scanbot.sdk.plugin.cordova.ScanbotBarcodeScannerActivity"
-                android:theme="@style/Theme.AppCompat"
-                android:screenOrientation="portrait" />
-      <meta-data android:name="ocr_blobs_path" android:value="scanbot-sdk/di/tessdata/" />
-      <meta-data android:name="language_classifier_blob_path" android:value="scanbot-sdk/di/" />
-    </config-file>
-
-    <!-- Permissions: -->
-    <config-file target="AndroidManifest.xml" parent="/manifest">
-      <uses-permission android:name="android.permission.CAMERA" />
-      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-      <uses-permission android:name="android.permission.VIBRATE" />
-    </config-file>
-
-    <!-- Java source files/dirs: -->
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/utils/FileUtils.java" target-dir="src/io/scanbot/sdk/plugin/cordova/utils" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/utils/ImageUtils.java" target-dir="src/io/scanbot/sdk/plugin/cordova/utils" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/utils/JsonArgs.java" target-dir="src/io/scanbot/sdk/plugin/cordova/utils" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/utils/LogUtils.java" target-dir="src/io/scanbot/sdk/plugin/cordova/utils" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/utils/ResourcesUtils.java" target-dir="src/io/scanbot/sdk/plugin/cordova/utils" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/widget/ShutterDrawable.java" target-dir="src/io/scanbot/sdk/plugin/cordova/widget" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/ScanbotBarcodeScannerActivity.java" target-dir="src/io/scanbot/sdk/plugin/cordova" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/ScanbotCameraActivity.java" target-dir="src/io/scanbot/sdk/plugin/cordova" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/ScanbotCameraPlugin.java" target-dir="src/io/scanbot/sdk/plugin/cordova" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/ScanbotConstants.java" target-dir="src/io/scanbot/sdk/plugin/cordova" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/ScanbotCordovaPluginBase.java" target-dir="src/io/scanbot/sdk/plugin/cordova" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/ScanbotEditImageActivity.java" target-dir="src/io/scanbot/sdk/plugin/cordova" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/ScanbotFeedbackGenerator.java" target-dir="src/io/scanbot/sdk/plugin/cordova" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/ScanbotSdkPlugin.java" target-dir="src/io/scanbot/sdk/plugin/cordova" />
-    <source-file src="src/android/java/io/scanbot/sdk/plugin/cordova/ScanbotSdkWrapper.java" target-dir="src/io/scanbot/sdk/plugin/cordova" />
-
-    <!-- Default OCR resources files: -->
-    <resource-file src="src/android/assets/scanbot-sdk/di/languageClassifier2.bin" target="assets/scanbot-sdk/di/languageClassifier2.bin" />
-    <resource-file src="src/android/assets/scanbot-sdk/di/tessdata/pdf.ttf" target="assets/scanbot-sdk/di/tessdata/pdf.ttf" />
-
-    <!-- Resource files/dirs: -->
-    <resource-file src="src/android/res/layout/action_bar_edit_polygon_view.xml" target="res/layout/action_bar_edit_polygon_view.xml" />
-    <resource-file src="src/android/res/layout/scanbot_camera_view.xml" target="res/layout/scanbot_camera_view.xml" />
-    <resource-file src="src/android/res/layout/scanbot_edit_image_view.xml" target="res/layout/scanbot_edit_image_view.xml" />
-    <resource-file src="src/android/res/layout/scanbot_barcode_scanner_view.xml" target="res/layout/scanbot_barcode_scanner_view.xml" />
-
-    <resource-file src="src/android/res/layout-land/scanbot_camera_view.xml" target="res/layout-land/scanbot_camera_view.xml" />
-
-    <resource-file src="src/android/res/drawable/ui_ico_flash.xml" target="res/drawable/ui_ico_flash.xml" />
-    <resource-file src="src/android/res/drawable/ui_bg_user_guidance_hint.xml" target="res/drawable/ui_bg_user_guidance_hint.xml" />
-
-    <resource-file src="src/android/res/drawable-hdpi/ui_action_checkmark.png" target="res/drawable-hdpi/ui_action_checkmark.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_cam_ico_flash.png" target="res/drawable-hdpi/ui_cam_ico_flash.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_cam_ico_flash_active.png" target="res/drawable-hdpi/ui_cam_ico_flash_active.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_cam_shutter.png" target="res/drawable-hdpi/ui_cam_shutter.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_crop_corner_handle.png" target="res/drawable-hdpi/ui_crop_corner_handle.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_crop_magnifier.png" target="res/drawable-hdpi/ui_crop_magnifier.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_crop_side_handle.png" target="res/drawable-hdpi/ui_crop_side_handle.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_snapping_button_inner33.png" target="res/drawable-hdpi/ui_snapping_button_inner33.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_snapping_button_inner33_active.png" target="res/drawable-hdpi/ui_snapping_button_inner33_active.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_snapping_button_inner66.png" target="res/drawable-hdpi/ui_snapping_button_inner66.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_snapping_button_inner66_active.png" target="res/drawable-hdpi/ui_snapping_button_inner66_active.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_snapping_button_outer.png" target="res/drawable-hdpi/ui_snapping_button_outer.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_snapping_button_outer_active.png" target="res/drawable-hdpi/ui_snapping_button_outer_active.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_scan_automatic_active.png" target="res/drawable-hdpi/ui_scan_automatic_active.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_scan_automatic.png" target="res/drawable-hdpi/ui_scan_automatic.png" />
-    <resource-file src="src/android/res/drawable-hdpi/ui_edit_rotate.png" target="res/drawable-hdpi/ui_edit_rotate.png" />
-
-    <resource-file src="src/android/res/drawable-mdpi/ui_action_checkmark.png" target="res/drawable-mdpi/ui_action_checkmark.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_cam_ico_flash.png" target="res/drawable-mdpi/ui_cam_ico_flash.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_cam_ico_flash_active.png" target="res/drawable-mdpi/ui_cam_ico_flash_active.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_cam_shutter.png" target="res/drawable-mdpi/ui_cam_shutter.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_crop_corner_handle.png" target="res/drawable-mdpi/ui_crop_corner_handle.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_crop_magnifier.png" target="res/drawable-mdpi/ui_crop_magnifier.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_crop_side_handle.png" target="res/drawable-mdpi/ui_crop_side_handle.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_snapping_button_inner33.png" target="res/drawable-mdpi/ui_snapping_button_inner33.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_snapping_button_inner33_active.png" target="res/drawable-mdpi/ui_snapping_button_inner33_active.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_snapping_button_inner66.png" target="res/drawable-mdpi/ui_snapping_button_inner66.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_snapping_button_inner66_active.png" target="res/drawable-mdpi/ui_snapping_button_inner66_active.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_snapping_button_outer.png" target="res/drawable-mdpi/ui_snapping_button_outer.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_snapping_button_outer_active.png" target="res/drawable-mdpi/ui_snapping_button_outer_active.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_scan_automatic_active.png" target="res/drawable-mdpi/ui_scan_automatic_active.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_scan_automatic.png" target="res/drawable-mdpi/ui_scan_automatic.png" />
-    <resource-file src="src/android/res/drawable-mdpi/ui_edit_rotate.png" target="res/drawable-mdpi/ui_edit_rotate.png" />
-
-    <resource-file src="src/android/res/drawable-xhdpi/ui_action_checkmark.png" target="res/drawable-xhdpi/ui_action_checkmark.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_cam_ico_flash.png" target="res/drawable-xhdpi/ui_cam_ico_flash.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_cam_ico_flash_active.png" target="res/drawable-xhdpi/ui_cam_ico_flash_active.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_cam_shutter.png" target="res/drawable-xhdpi/ui_cam_shutter.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_crop_corner_handle.png" target="res/drawable-xhdpi/ui_crop_corner_handle.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_crop_magnifier.png" target="res/drawable-xhdpi/ui_crop_magnifier.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_crop_side_handle.png" target="res/drawable-xhdpi/ui_crop_side_handle.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_snapping_button_inner33.png" target="res/drawable-xhdpi/ui_snapping_button_inner33.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_snapping_button_inner33_active.png" target="res/drawable-xhdpi/ui_snapping_button_inner33_active.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_snapping_button_inner66.png" target="res/drawable-xhdpi/ui_snapping_button_inner66.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_snapping_button_inner66_active.png" target="res/drawable-xhdpi/ui_snapping_button_inner66_active.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_snapping_button_outer.png" target="res/drawable-xhdpi/ui_snapping_button_outer.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_snapping_button_outer_active.png" target="res/drawable-xhdpi/ui_snapping_button_outer_active.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_scan_automatic_active.png" target="res/drawable-xhdpi/ui_scan_automatic_active.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_scan_automatic.png" target="res/drawable-xhdpi/ui_scan_automatic.png" />
-    <resource-file src="src/android/res/drawable-xhdpi/ui_edit_rotate.png" target="res/drawable-xhdpi/ui_edit_rotate.png" />
-
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_action_checkmark.png" target="res/drawable-xxhdpi/ui_action_checkmark.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_cam_ico_cancel.png" target="res/drawable-xxhdpi/ui_cam_ico_cancel.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_cam_ico_flash.png" target="res/drawable-xxhdpi/ui_cam_ico_flash.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_cam_ico_flash_active.png" target="res/drawable-xxhdpi/ui_cam_ico_flash_active.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_cam_shutter.png" target="res/drawable-xxhdpi/ui_cam_shutter.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_crop_corner_handle.png" target="res/drawable-xxhdpi/ui_crop_corner_handle.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_crop_magnifier.png" target="res/drawable-xxhdpi/ui_crop_magnifier.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_crop_side_handle.png" target="res/drawable-xxhdpi/ui_crop_side_handle.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_edit_ico_cancel.png" target="res/drawable-xxhdpi/ui_edit_ico_cancel.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_snapping_button_inner33.png" target="res/drawable-xxhdpi/ui_snapping_button_inner33.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_snapping_button_inner33_active.png" target="res/drawable-xxhdpi/ui_snapping_button_inner33_active.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_snapping_button_inner66.png" target="res/drawable-xxhdpi/ui_snapping_button_inner66.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_snapping_button_inner66_active.png" target="res/drawable-xxhdpi/ui_snapping_button_inner66_active.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_snapping_button_outer.png" target="res/drawable-xxhdpi/ui_snapping_button_outer.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_snapping_button_outer_active.png" target="res/drawable-xxhdpi/ui_snapping_button_outer_active.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_scan_automatic_active.png" target="res/drawable-xxhdpi/ui_scan_automatic_active.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_scan_automatic.png" target="res/drawable-xxhdpi/ui_scan_automatic.png" />
-    <resource-file src="src/android/res/drawable-xxhdpi/ui_edit_rotate.png" target="res/drawable-xxhdpi/ui_edit_rotate.png" />
-
-    <!-- Scanbot Gradle settings. Provides dependencies for Scanbot SDK -->
-    <framework src="src/android/build-extras-sb.gradle" custom="true" type="gradleReference" />
-</platform>
+        <!-- <podspec>
+            <config>
+                <source url="https://github.com/Anyline/anyline-ocr-examples-ios.git" />
+                <source url="https://github.com/CocoaPods/Specs.git"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="Anyline" type="podspec" spec="~> 17" />
+            </pods>
+        </podspec> -->
 
 
-<!-- iOS -->
-  <platform name="ios">
-    <config-file target="config.xml" parent="/*">
-      <feature name="ScanbotSdk">
-        <param name="ios-package" value="ScanbotSdkPlugin" />
-      </feature>
-      <feature name="ScanbotSdkUi">
-        <param name="ios-package" value="ScanbotCameraPlugin"/>
-      </feature>
-    </config-file>
+        <!-- Frameworks needed by Anyline SDK for iOS -->
+        <framework src="libz.tbd"/>
+        <framework src="libc++.tbd"/>
+        <framework src="AssetsLibrary.framework"/>
+        <framework src="Accelerate.framework"/>
 
-    <header-file src="src/ios/ScanbotSdkPlugin.h" />
-    <source-file src="src/ios/ScanbotSdkPlugin.m" />
-    <header-file src="src/ios/ScanbotCameraPlugin.h" />
-    <source-file src="src/ios/ScanbotCameraPlugin.m" />
-    <header-file src="src/ios/ScanbotCameraViewController.h" />
-    <source-file src="src/ios/ScanbotCameraViewController.m" />
-    <header-file src="src/ios/ScanbotBarcodeScannerViewController.h" />
-    <source-file src="src/ios/ScanbotBarcodeScannerViewController.m" />
-    <header-file src="src/ios/HandyJSONParameters.h" />
-    <source-file src="src/ios/HandyJSONParameters.m" />
-    <header-file src="src/ios/ImageUtils.h" />
-    <source-file src="src/ios/ImageUtils.m" />
-    <header-file src="src/ios/SharedConfiguration.h" />
-    <source-file src="src/ios/SharedConfiguration.m" />
-    <header-file src="src/ios/LoggingUtils.h" />
+    </platform>
+    <platform name="android">
+	
+		<js-module src="www/anyline.js" name="anyline">
+			<clobbers target="window.Anyline" />
+		</js-module>
+	
+        <!-- register plugin -->
+        <framework custom="true" src="src/android/anyline.gradle" type="gradleReference"/>
 
-    <!-- Categories -->
-    <header-file src="src/ios/Categories/SBSDKPolygon+JSON.h" target-dir="Categories" />
-    <source-file src="src/ios/Categories/SBSDKPolygon+JSON.m" target-dir="Categories" />
-    <header-file src="src/ios/Categories/UIColor+JSON.h" target-dir="Categories" />
-    <source-file src="src/ios/Categories/UIColor+JSON.m" target-dir="Categories" />
-    <header-file src="src/ios/Categories/SBSDKOCRResult+JSON.h" target-dir="Categories" />
-    <source-file src="src/ios/Categories/SBSDKOCRResult+JSON.m" target-dir="Categories" />
-    <header-file src="src/ios/Categories/SBSDKPageAnalyzerResult+JSON.h" target-dir="Categories" />
-    <source-file src="src/ios/Categories/SBSDKPageAnalyzerResult+JSON.m" target-dir="Categories" />
+        <config-file parent="/*" target="config.xml">
+            <feature name="AnylineSDK">
+                <param name="android-package" value="io.anyline.cordova.AnylinePlugin"/>
+                <param name="onload" value="true"/>
+            </feature>
+        </config-file>
+        <!-- add permissions in AndroidManifest.xml file-->
+        <config-file mode="merge" parent="/manifest" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.CAMERA"/>
+            <uses-permission android:name="android.permission.VIBRATE"/>
+        </config-file>
+        <config-file mode="merge" parent="/manifest/application" target="AndroidManifest.xml">
+            <meta-data
+                    android:name="com.google.android.gms.vision.DEPENDENCIES"
+                    android:value="barcode"/>
+        </config-file>
+        <config-file mode="merge" parent="/manifest/application" target="AndroidManifest.xml">
+	    <activity android:name="io.anyline.cordova.Document4Activity"
+                      android:theme="@android:style/Theme.Black.NoTitleBar" />
+	    <activity android:name="io.anyline.cordova.Anyline4Activity"
+                      android:theme="@android:style/Theme.Black.NoTitleBar" />
+	    <activity android:name="io.anyline.cordova.CropViewUIActivity"
+                      android:theme="@android:style/Theme.Black.NoTitleBar" />
+	    <activity android:name="io.anyline.cordova.DocumentScanViewUIActivity"
+                      android:theme="@android:style/Theme.Black.NoTitleBar" />
+	    <activity android:name="io.anyline.cordova.DocScanUIMainActivity"
+                      android:theme="@android:style/Theme.Black.NoTitleBar" />
+        </config-file>
 
-    <!-- Resources -->
-    <resource-file src="src/ios/Images/ui_action_close/ui_action_close.png" />
-    <resource-file src="src/ios/Images/ui_action_close/ui_action_close@2x.png" />
-    <resource-file src="src/ios/Images/ui_action_close/ui_action_close@3x.png" />
-    
-    <resource-file src="src/ios/Images/ui_action_checkmark/ui_action_checkmark.png" />
-    <resource-file src="src/ios/Images/ui_action_checkmark/ui_action_checkmark@2x.png" />
-    <resource-file src="src/ios/Images/ui_action_checkmark/ui_action_checkmark@3x.png" />
-    
-    <resource-file src="src/ios/Images/ui_flash_on/ui_flash_on.png" />
-    <resource-file src="src/ios/Images/ui_flash_on/ui_flash_on@2x.png" />
-    <resource-file src="src/ios/Images/ui_flash_on/ui_flash_on@3x.png" />
+        <!-- add plugin source code -->
+	    <source-file src="src/android/io/anyline/cordova/Anyline4Activity.java" target-dir="src/io/anyline/cordova"/>        
+	    <source-file src="src/android/io/anyline/cordova/AnylineBaseActivity.java" target-dir="src/io/anyline/cordova"/>
+        <source-file src="src/android/io/anyline/cordova/AnylinePlugin.java" target-dir="src/io/anyline/cordova"/>
+	    <source-file src="src/android/io/anyline/cordova/AnylinePluginHelper.java" target-dir="src/io/anyline/cordova"/>
+        <source-file src="src/android/io/anyline/cordova/Document4Activity.java" target-dir="src/io/anyline/cordova"/>
+        <source-file src="src/android/io/anyline/cordova/CordovaUIConfig.java" target-dir="src/io/anyline/cordova"/>
+        <source-file src="src/android/io/anyline/cordova/ResultReporter.java" target-dir="src/io/anyline/cordova"/>
+        <source-file src="src/android/io/anyline/cordova/Resources.java" target-dir="src/io/anyline/cordova"/>
 
-    <resource-file src="src/ios/Images/ui_flash_off/ui_flash_off.png" />
-    <resource-file src="src/ios/Images/ui_flash_off/ui_flash_off@2x.png" />
-    <resource-file src="src/ios/Images/ui_flash_off/ui_flash_off@3x.png" />
 
-    <resource-file src="src/ios/Images/ui_scan_handlebig/ui_scan_handlebig.png" />
-    <resource-file src="src/ios/Images/ui_scan_handlebig/ui_scan_handlebig@2x.png" />
-    <resource-file src="src/ios/Images/ui_scan_handlebig/ui_scan_handlebig@3x.png" />
-    
-    <resource-file src="src/ios/Images/ui_scan_handlesmall/ui_scan_handlesmall.png" />
-    <resource-file src="src/ios/Images/ui_scan_handlesmall/ui_scan_handlesmall@2x.png" />
-    <resource-file src="src/ios/Images/ui_scan_handlesmall/ui_scan_handlesmall@3x.png" />
-    
-    <resource-file src="src/ios/Images/ui_capture_edit_magnifier/ui_capture_edit_magnifier.png" />
-    <resource-file src="src/ios/Images/ui_capture_edit_magnifier/ui_capture_edit_magnifier@2x.png" />
-    <resource-file src="src/ios/Images/ui_capture_edit_magnifier/ui_capture_edit_magnifier@3x.png" />
-    
-    <resource-file src="src/ios/Images/ui_autosnap_off/ui_autosnap_off.png" />
-    <resource-file src="src/ios/Images/ui_autosnap_off/ui_autosnap_off@2x.png" />
-    <resource-file src="src/ios/Images/ui_autosnap_off/ui_autosnap_off@3x.png" />
-    
-    <resource-file src="src/ios/Images/ui_autosnap_on/ui_autosnap_on.png" />
-    <resource-file src="src/ios/Images/ui_autosnap_on/ui_autosnap_on@2x.png" />
-    <resource-file src="src/ios/Images/ui_autosnap_on/ui_autosnap_on@3x.png" />
+        <resource-file src="src/android/res/values/anyline_sdk_plugin_strings.xml"
+                       target="res/values/anyline_sdk_plugin_strings.xml"/>
+        <resource-file src="src/android/res/values/anyline_sdk_plugin_colors.xml"
+                       target="res/values/anyline_sdk_plugin_colors.xml"/>
+        <resource-file src="src/android/res/values-de/anyline_sdk_plugin_strings.xml"
+                       target="res/values-de/anyline_sdk_plugin_strings.xml"/>
+        <resource-file src="src/android/res/layout/activity_scan_document.xml"
+                       target="res/layout/activity_scan_document.xml"/>
+        <resource-file src="src/android/res/layout/activity_scan_scanview.xml"
+                       target="res/layout/activity_scan_scanview.xml"/>
 
-    <resource-file src="src/ios/Images/ui_edit_rotate/ui_edit_rotate.png" />
-    <resource-file src="src/ios/Images/ui_edit_rotate/ui_edit_rotate@2x.png" />
-    <resource-file src="src/ios/Images/ui_edit_rotate/ui_edit_rotate@3x.png" />
+    </platform>
 
-    <resource-file src="src/ios/Frameworks/SBSDKLanguageData/" />
-    
-    <!-- Dependencies - frameworks: -->
-    <framework src="src/ios/Frameworks/ScanbotSDK.framework" custom="true" embed="true" />
-    <framework src="AudioToolbox.framework" />
 
-    <!-- Required permission settings since iOS 10 -->
-    <preference name="CAMERA_USAGE_DESCRIPTION" default=" " />
-    <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
-      <string>$CAMERA_USAGE_DESCRIPTION</string>
-    </config-file>
-    <preference name="PHOTOLIBRARY_USAGE_DESCRIPTION" default=" " />
-    <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
-      <string>$PHOTOLIBRARY_USAGE_DESCRIPTION</string>
-    </config-file>
-
-    <config-file target="*-Info.plist" parent="UIFileSharingEnabled">
-      <true/>
-    </config-file>
-
-  </platform>
+     <!-- windows -->
+    <platform name="windows">
+        <framework src="src/windows/lib/x86/Anyline.JS.winmd" target-dir="x86" arch="x86" custom="true" versions=">=10.0"/>
+        <framework src="src/windows/lib/x86/Anyline.winmd" implementation="src/windows/lib/x86/Anyline.dll" target-dir="x86" arch="x86" custom="true" versions=">=10.0"/>
+        <framework src="src/windows/lib/x86/Anyline.SDK.dll" target-dir="x86" arch="x86" />
+		
+		<framework src="src/windows/lib/arm/Anyline.JS.winmd" target-dir="arm" arch="arm" custom="true" versions=">=10.0"/>
+        <framework src="src/windows/lib/arm/Anyline.winmd" implementation="src/windows/lib/arm/Anyline.dll" target-dir="arm" arch="arm" custom="true" versions=">=10.0"/>
+        <framework src="src/windows/lib/arm/Anyline.SDK.dll" target-dir="arm" arch="arm" />
+		
+		<config-file target="package.appxmanifest" parent="/Package/Capabilities">
+            <DeviceCapability Name="webcam"/>
+        </config-file>
+        <js-module src="src/windows/AnylineProxy.js" name="AnylineProxy" >
+            <runs />
+        </js-module>
+        <js-module src="src/windows/scanview.js" name="ScanView">
+            <clobbers target="anyline.sdk" />
+        </js-module>
+        <asset src="src/windows/assets" target="plugins/io-anyline-cordova/src/windows/assets" />
+        <asset src="src/windows/css" target="css" />
+        <asset src="src/windows/js" target="js" />
+		<asset src="src/windows/img" target="img" />
+    </platform>
 
 </plugin>

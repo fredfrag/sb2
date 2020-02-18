@@ -1,40 +1,26 @@
 {
-  "name": "cordova-plugin-scanbot-sdk",
-  "version": "1.7.0",
-  "description": "Cordova Plugin for Scanbot SDK",
+  "name": "io-anyline-cordova",
+  "version": "19.0.0",
+  "description": "The cordova plugin for the Anyline SDK",
   "cordova": {
-    "id": "cordova-plugin-scanbot-sdk",
+    "id": "io-anyline-cordova",
     "platforms": [
+      "ios",
       "android",
-      "ios"
+      "windows"
     ]
   },
-  "scripts": {
-    "prepublish": "./prepare-scanbotsdk-framework.sh 1.6.0"
-  },
   "keywords": [
-    "scanbot",
-    "sdk",
-    "camera",
-    "scanner",
-    "scanning",
-    "document detection",
-    "edge detection",
-    "cropping",
-    "pdf",
-    "pdf creation",
-    "image optimization",
-    "image filter",
-    "ocr",
-    "optical character recognition",
-    "barcode",
-    "qr code",
-    "cordova",
-    "plugin",
     "ecosystem:cordova",
+    "cordova-ios",
     "cordova-android",
-    "cordova-ios"
+    "cordova-windows"
   ],
-  "author": "doo GmbH",
-  "homepage": "https://scanbot.io/sdk.html"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Anyline/anyline-ocr-cordova-module"
+  },
+  "author": "Anyline GmbH",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {}
 }
